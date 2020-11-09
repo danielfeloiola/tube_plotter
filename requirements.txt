@@ -1,0 +1,6 @@
+Flask
+Flask-Session
+requests
+svgwrite
+Pillow
+gunicorn

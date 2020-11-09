@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    results
+{% endblock %}
+
+{% block main %}
+    <!-- show the image on the page -->
+    <object type="image/svg+xml" data="{{ session.file_url }}"></object>
+{% endblock %}
+
+{% block footer %}
+    <!-- footer info -->
+    Open the image <a target="_blank" href="{{ session.file_url }}"> on a new tab</a> or <a download href="{{ session.file_url }}"> download the file</a>
+{% endblock %}

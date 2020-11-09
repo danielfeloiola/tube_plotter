@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    upload
+{% endblock %}
+
+{% block main %}
+
+    <!-- the main bit -->
+    <div id="maindiv">
+
+        <!-- Just a header... no big deal-->
+        <h3>File Upload</h3>
+        <br>
+
+        <!-- Form to upload a file -->
+        <form action="/" method="POST" enctype="multipart/form-data" id="form">
+            <p><input type="file" name="file" id="file"></p>
+            <p><input class="btn btn-primary" type="submit" value="Send"></p>
+        </form>
+        <br>
+
+    </div>
+
+    <!-- div to add the counter later on -->
+    <div id="infodiv"></div>
+
+    <!-- div to add the result lonk -->
+    <div id="resultdiv"></div>
+
+{% endblock %}
+
+{% block footer %}
+
+    Source code available on <a href="https://github.com/danielfeloiola/tube_plotter">GitHub</a>.
+
+{% endblock %}

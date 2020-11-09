@@ -1,0 +1,7 @@
+{
+  "name": "tube_plotter",
+  "description": "Web tool to plot thumbnails on a graph extracted using YouTube Data Tools from DMI",
+  "repository": "https://github.com/danielfeloiola/tube_plotter",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["flask", "youtube", "plotter"]
+}
