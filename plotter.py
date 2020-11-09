@@ -1,3 +1,9 @@
+# IMAGE PLOTTER
+# Basen on Mintz's image-network plotter
+# https://github.com/amintz/image-network-plotter
+# Adapted by Daniel Loiola (2020)
+
+
 import svgwrite as svg
 import xml.etree.ElementTree as et
 from PIL import Image
