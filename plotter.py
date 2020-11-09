@@ -16,11 +16,8 @@ from application import images_counter, session
 
 # # TODO:
 # fix sys.exit errors > show to the user
-# remove debug code
-# remove useless coments
 
 
-# main fuction
 def img_plotter(id, filename):
 
 
@@ -162,14 +159,10 @@ def img_plotter(id, filename):
     for node in nodes:
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
-        #print("\n\nDrawing image", curimg, "in", numimages)
-        #print("Drawing image", curimg, "in", numimages)
-
         curimg += 1
 
         # add the number of processed images to the variable
         images_counter[session.get('id')] = f'{curimg} of {numimages}'
-        #print(images_counter[session.get('id')])
 
 
         innodex = (float(node.find("viz:position", viz).get('x'))-minx)/inw

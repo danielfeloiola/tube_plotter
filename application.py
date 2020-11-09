@@ -16,24 +16,19 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-# Set max file size to 16mb
+# Uploads settings
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
-# Accept gexf files only
 app.config['UPLOAD_EXTENSIONS'] = '.gexf'
-
-# folder for uploaded files
 app.config['UPLOAD_PATH'] = 'static/uploads'
 
-# FIX THIS !!!!!!!!!!
+# Setting the secret key
 app.config['SECRET_KEY'] = os.getenv("KEY")
 
 # Configure session to use filesystem (instead of signed cookies)
-#app.config['SESSION_FILE_DIR'] = mkdtemp()
+app.config['SESSION_FILE_DIR'] = mkdtemp()
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_SECURE'] = True
-
 Session(app)
 
 
