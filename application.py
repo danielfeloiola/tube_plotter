@@ -89,7 +89,7 @@ def index():
         from plotter import img_plotter
         img_plotter('export', filename)
 
-        # this is not really needed anyway...
+        # When finished, return a json to update the front-end.
         return jsonify('Finished')
 
 
@@ -106,13 +106,31 @@ def counter():
 
     # get the global dict counter
     global images_counter
+
     images_processed = images_counter[session.get('id')]
 
     # if the gefx file is still being processed
-    if images_counter[session.get('id')] == 'Analyzing file':
-        return jsonify('Analyzing file')
+    #if images_processed == 'Analyzing file':
+    #    return jsonify('Analyzing file')
 
     # if the plotter is already running
+    #else:
+    #    return jsonify('Analyzing file')
+
+    # if the plotter is already running
+    #else:
+
+    if images_processed != 'Analyzing file':
+        result = images_processed.split(" of ")
+        completed = result[0]
+        total = result[1]
+
+        if completed == total:
+            return jsonify('Finished')
+        else:
+            return jsonify(images_processed)
+
+
     else:
         return jsonify(images_processed)
 

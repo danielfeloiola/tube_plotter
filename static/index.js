@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // get the response text
                 var response = xhr2.responseText;
-                console.log("DEBUG" + response);
+                //// DEBUG: 
+                console.log("DEBUG: " + response);
 
 
                 if (response.includes("of")) {
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // // DEBUG:
                     console.log("working...")
+
                 } else if (response.includes("Analyzing file")) {
                     // start
                     document.getElementById("infodiv").innerHTML = "Analyzing file";

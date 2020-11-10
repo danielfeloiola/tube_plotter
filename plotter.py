@@ -164,7 +164,6 @@ def img_plotter(id, filename):
         # add the number of processed images to the variable
         images_counter[session.get('id')] = f'{curimg} of {numimages}'
 
-
         innodex = (float(node.find("viz:position", viz).get('x'))-minx)/inw
         innodey = (float(node.find("viz:position", viz).get('y'))-miny)/inh
 
@@ -208,7 +207,7 @@ def img_plotter(id, filename):
 
                 imgfp = imgfile
 
-            print("\tPlotting image...\n")
+            print("\tPlotting image: ", images_counter[session.get('id')])
 
             link = outsvg.add(outsvg.a(linkUrl,id=nodeid))
             image = link.add(outsvg.image(imgfp, insert=(outnodex, outnodey), size=imgdrawdim))
