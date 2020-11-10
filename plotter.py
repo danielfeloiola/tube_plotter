@@ -154,7 +154,7 @@ def img_plotter(id, filename):
 
     outsvg = svg.Drawing(outputfilename, (settings['outw'], settings['outh']), debug=True)
 
-    curimg = 1
+    curimg = 0
 
     for node in nodes:
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
