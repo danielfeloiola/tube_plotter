@@ -36,18 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             var response = xhr.responseText;
             console.log(response)
 
-            if (response.includes("Finished")) {
 
-                // also stop timer
-                //stopTimer()
-                clearTimeout(interval);
-                console.log("Stopping timer")
-
-                // Say Finished and show results link
-                document.getElementById("infodiv").innerHTML = "Finished";
-                document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results'>Results Page</a>";
-
-            }
             if (response.includes("Please upload a GEFX file")) {
                 // stop the counter and display error
                 clearTimeout(interval);
@@ -76,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // get the response text
                 var response = xhr2.responseText;
-                //// DEBUG: 
+                //// DEBUG:
                 console.log("DEBUG: " + response);
 
 
@@ -95,6 +84,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // // DEBUG:
                     console.log("Starting...")
+                }
+                else if (response.includes("Finished")) {
+
+                    // also stop timer
+                    //stopTimer()
+                    clearTimeout(interval);
+                    console.log("Stopping timer")
+
+                    // Say Finished and show results link
+                    document.getElementById("infodiv").innerHTML = "Finished";
+                    document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results'>Results Page</a>";
+
                 }
             };
 

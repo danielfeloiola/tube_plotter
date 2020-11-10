@@ -90,7 +90,7 @@ def index():
         img_plotter('export', filename)
 
         # When finished, return a json to update the front-end.
-        return jsonify('Finished')
+        #return jsonify('Finished')
 
 
 @app.route('/results', methods=['GET'])
@@ -124,6 +124,8 @@ def counter():
         result = images_processed.split(" of ")
         completed = result[0]
         total = result[1]
+
+        print(f"DEBUG: completed = {completed} total={total}", )
 
         if completed == total:
             return jsonify('Finished')
