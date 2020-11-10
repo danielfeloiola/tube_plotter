@@ -65,17 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // get the response text
                 var response = xhr2.responseText;
-                //// DEBUG:
-                console.log("DEBUG: " + response);
-
 
                 if (response.includes("of")) {
                     // display progress
                     document.getElementById("infodiv").innerHTML = "Processed images: " + response.replace(/['"]+/g, '');
                     document.getElementById("resultdiv").innerHTML = "";
-
-                    // // DEBUG:
-                    console.log("working...")
 
                 } else if (response.includes("Analyzing file")) {
                     // start
@@ -90,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     // also stop timer
                     //stopTimer()
                     clearTimeout(interval);
-                    console.log("Stopping timer")
 
                     // Say Finished and show results link
                     document.getElementById("infodiv").innerHTML = "Finished";
