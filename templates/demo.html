@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    demo
+{% endblock %}
+
+{% block main %}
+    <!-- show the image on the page -->
+    <object type="image/svg+xml" data="{{ url_for('static', filename='demo.svg')}}"></object>
+{% endblock %}
+
+{% block footer %}
+    <!-- footer info -->
+    Open the image <a target="_blank" href="{{ url_for('static', filename='demo.svg')}}"> on a new tab</a> or <a download href="{{ url_for('static', filename='demo.svg')}}"> download the file</a>
+{% endblock %}
