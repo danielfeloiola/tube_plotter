@@ -119,7 +119,7 @@ def counter():
 def demo():
     '''Render a page with the SVG file'''
 
-    return render_template("result.html")
+    return render_template("demo.html")
 
 
 def get_random_string(length):
