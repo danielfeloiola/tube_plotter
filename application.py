@@ -1,5 +1,9 @@
 from flask import Flask, jsonify, redirect, render_template, request, session
+from werkzeug.utils import secure_filename
+from flask_session import Session
+from datetime import timedelta, datetime
 import os, random, string
+from tempfile import mkdtemp
 
 
 # dict to count images
@@ -31,84 +35,72 @@ Session(app)
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Expires'] = 0
+    response.headers['Pragma'] = 'no-cache'
     return response
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    """Show the main page with instructions"""
+    '''Show the main page with instructions'''
 
-    if request.method == "GET":
+    if request.method == 'GET':
 
         # if there is no session, make one
         if session.get('id') is None:
             id = get_random_string(12)
             session['id'] = id
-            print(session['id'])
 
         # render the home page
         return render_template('index.html')
 
-    elif request.method == "POST":
 
-        # TODO: settings menu
+    elif request.method == 'POST':
 
         # get file
         f = request.files['file']
+
+        # Handles files from different users > NEEDS FIXING!!!
+        file_url = 'static/uploads/visual_export.svg'
+        session["file_url"] = file_url
 
         # check filename and extension
         filename = f.filename
         if filename != '':
             file_ext = os.path.splitext(filename)[1]
 
-            # if the format is not a gexf file
+            # if the file is not a gexf file show an error message
             if file_ext != app.config['UPLOAD_EXTENSIONS']:
-
-                # show error mesage
-                return jsonify("Please upload a GEFX file")
-
+                return jsonify('Please upload a GEFX file')
 
             # save the file
             f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
 
-        # if the file has no name
+        # if the file has no name, return a warning
         else:
-            # warning: file must have a name
-            return jsonify("Check filename")
+            return jsonify('Check filename')
+
+        # set the counter to indicate the analysis started
+        images_counter[session.get('id')] = 'Analyzing file'
+        print(images_counter[session.get('id')])
+
+        # run plotter
+        from plotter import img_plotter
+        img_plotter('export', filename)
+
+        # This is not really necessary anymore...
+        #return jsonify('Finished')
 
 
-        # making a random id/filename
-        id = get_random_string(12)
-        file_url = 'static/uploads/visual_export.svg'
-
-        # add the id to the session
-        session["id"] = id
-        session["file_url"] = file_url
-
-        # get the plotter ready
-        import plotter
-
-        # reset variables for every file submitted
-        plotter.curimg = 1
-        plotter.numimages = 0
-
-        # and run
-        plotter.img_plotter("export", filename)
-
-        # json to display the results page
-        return jsonify("Finished")
-
-
-@app.route("/results", methods=["GET"])
+@app.route('/results', methods=['GET'])
 def results():
     '''Render a page with the SVG file'''
 
-    return render_template("result.html")
+    return render_template('result.html')
 
-@app.route("/counter", methods=["POST"])
+
+@app.route('/counter', methods=['POST'])
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
@@ -134,17 +126,17 @@ def counter():
         return jsonify(images_processed)
 
 
+def get_random_string(length):
+    '''Makes a random string for the user id'''
+
+    letters = string.ascii_letters
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
+
+
 
 @app.route("/demo", methods=["GET"])
 def demo():
     '''Render a page with the SVG file'''
 
     return render_template("demo.html")
-
-
-def get_random_string(length):
-    '''Makes a random string for the filename'''
-
-    letters = string.ascii_letters
-    result_str = ''.join(random.choice(letters) for i in range(length))
-    return result_str
