@@ -51,6 +51,7 @@ def index():
         if session.get('id') is None:
             id = get_random_string(12)
             session['id'] = id
+            print(session['id'])
 
         # render the home page
         return render_template('index.html')
@@ -132,4 +133,3 @@ def get_random_string(length):
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
-
