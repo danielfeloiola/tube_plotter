@@ -2,23 +2,31 @@ from flask import Flask, jsonify, redirect, render_template, request, session
 import os, random, string
 
 
+# dict to count images
+images_counter = dict()
+
+
 # Configure application
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-# Set max file size to 16mb
+# Uploads settings
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
-# Accept gexf files only
 app.config['UPLOAD_EXTENSIONS'] = '.gexf'
-
-# folder for uploaded files
 app.config['UPLOAD_PATH'] = 'static/uploads'
 
-# set secret key
-app.config["SECRET_KEY"] = os.getenv("KEY")
+# Setting the secret key
+app.config['SECRET_KEY'] = os.getenv("KEY")
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config['SESSION_FILE_DIR'] = mkdtemp()
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_COOKIE_SECURE'] = True
+Session(app)
+
 
 # Ensure responses aren't cached
 @app.after_request
@@ -35,8 +43,14 @@ def index():
 
     if request.method == "GET":
 
+        # if there is no session, make one
+        if session.get('id') is None:
+            id = get_random_string(12)
+            session['id'] = id
+            print(session['id'])
+
         # render the home page
-        return render_template("index.html")
+        return render_template('index.html')
 
     elif request.method == "POST":
 
@@ -98,21 +112,27 @@ def results():
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
-    # import the plotter to acess the variables
-    import plotter
+    # get the global dict counter
+    global images_counter
 
-    # if the first image is still being processed
-    if plotter.curimg == 1 and plotter.numimages == 0:
-        return jsonify("Starting")
+    images_processed = images_counter[session.get('id')]
 
-    # Get the number of images already processed
+    # if the process already started
+    if images_processed != 'Analyzing file':
+        result = images_processed.split(" of ")
+        completed = result[0]
+        total = result[1]
+
+        # if completed, return finish to display the results on th frontend
+        if completed == total:
+            return jsonify('Finished')
+        else:
+            return jsonify(images_processed)
+
+
     else:
+        return jsonify(images_processed)
 
-        # format the string for the frontend
-        return_str = str(plotter.curimg - 1) + ' of ' + str(plotter.numimages)
-
-        # send away
-        return jsonify(return_str)
 
 
 @app.route("/demo", methods=["GET"])
