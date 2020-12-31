@@ -48,16 +48,21 @@ def index():
     if request.method == 'GET':
 
         # if there is no session, make one
-        if session.get('id') is None:
-            id = get_random_string(12)
-            session['id'] = id
-            print(session['id'])
+        #if session.get('id') is None:
+        id = get_random_string(12)
+        session['id'] = id
+        print(session['id'])
 
         # render the home page
         return render_template('index.html')
 
 
     elif request.method == 'POST':
+
+        if session.get('id') is None:
+            id = get_random_string(12)
+            session['id'] = id
+            print(session['id'])
 
         # get file
         f = request.files['file']
@@ -91,7 +96,7 @@ def index():
         img_plotter('export', filename)
 
         # This is not really necessary anymore...
-        #return jsonify('Finished')
+        return jsonify('Finished')
 
 
 @app.route('/results', methods=['GET'])
@@ -121,7 +126,6 @@ def counter():
             return jsonify('Finished')
         else:
             return jsonify(images_processed)
-
 
     else:
         return jsonify(images_processed)
