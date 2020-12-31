@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from flask_session import Session
 from datetime import timedelta, datetime
 import os, random, string
-from tempfile import mkdtemp
+#from tempfile import mkdtemp
 
 
 # dict to count images
