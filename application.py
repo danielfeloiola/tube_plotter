@@ -51,6 +51,7 @@ def index():
         #if session.get('id') is None:
         id = get_random_string(12)
         session['id'] = id
+        # DEBUG
         print(session['id'])
 
         # render the home page
@@ -62,6 +63,7 @@ def index():
         if session.get('id') is None:
             id = get_random_string(12)
             session['id'] = id
+            # DEBUG
             print(session['id'])
 
         # get file
@@ -114,6 +116,8 @@ def counter():
     global images_counter
 
     images_processed = images_counter[session.get('id')]
+    # DEBUG:
+    print(session.get('id'))
 
     # if the process already started
     if images_processed != 'Analyzing file':
