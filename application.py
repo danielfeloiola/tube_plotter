@@ -1,8 +1,5 @@
 from flask import Flask, jsonify, redirect, render_template, request, session
-from werkzeug.utils import secure_filename
-from flask_session import Session
 import os, random, string
-import git
 
 
 # Configure application
@@ -118,17 +115,11 @@ def counter():
         return jsonify(return_str)
 
 
-@app.route("/update_server", methods=["POST"])
-def webhook():
-    if request.method == 'POST':
-        repo = git.Repo('.')
-        origin = repo.remotes.origin
-        origin.pull()
+@app.route("/demo", methods=["GET"])
+def demo():
+    '''Render a page with the SVG file'''
 
-        return('Updated PythonAnywhere successfully', 200)
-
-    else:
-        return('Wrong event type', 400)
+    return render_template("result.html")
 
 
 def get_random_string(length):
@@ -137,4 +128,3 @@ def get_random_string(length):
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
-    
