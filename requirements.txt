@@ -4,3 +4,4 @@ requests
 svgwrite
 Pillow
 gunicorn
+tempfile
