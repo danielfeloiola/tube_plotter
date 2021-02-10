@@ -132,7 +132,7 @@ def counter():
     # # DEBUG:
     print("DEBUG: >>>>>>>>>>>>>>>" + session['type'])
 
-    if session['type'] == 'gexf':
+    if session['type'] != 'gexf':
         print("YES!!!!!!!!!!")
 
     # skips the count if processing a svg file
