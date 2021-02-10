@@ -50,11 +50,11 @@ def index():
 
 
         # if there is no session, make one
-        if session.get('id') is None:
+        #if session.get('id') is None:
 
             # generate a ramdom string as a session id
-            session['id'] = get_random_string(12)
-            session['type'] = 'none'
+        session['id'] = get_random_string(12)
+        session['type'] = 'none'
 
 
         # get the file uploaded file
@@ -123,7 +123,7 @@ def results():
     return render_template('result.html')
 
 
-@app.route('/counter', methods=['POST'])
+@app.route('/counter', methods=['GET', 'POST'])
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
