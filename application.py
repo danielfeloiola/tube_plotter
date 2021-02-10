@@ -22,6 +22,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.gexf', '.svg']
 app.config['UPLOAD_PATH'] = 'static/uploads'
 
+print(os.getenv("KEY"))
 # Setting the secret key
 app.config['SECRET_KEY'] = os.getenv("KEY")
 #''.join(random.choice(string.ascii_letters) for i in range(25))
