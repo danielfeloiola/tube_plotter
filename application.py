@@ -22,7 +22,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.gexf', '.svg']
 app.config['UPLOAD_PATH'] = 'static/uploads'
 
-print(os.getenv("KEY"))
 # Setting the secret key
 app.config['SECRET_KEY'] = os.getenv("KEY")
 #''.join(random.choice(string.ascii_letters) for i in range(25))
@@ -31,7 +30,7 @@ app.config['SECRET_KEY'] = os.getenv("KEY")
 #app.config['SESSION_FILE_DIR'] = mkdtemp()
 #app.config['SESSION_PERMANENT'] = False
 #app.config['SESSION_TYPE'] = 'filesystem'
-#app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SECURE'] = True
 Session(app)
 
 # Ensure responses aren't cached
