@@ -123,27 +123,30 @@ def counter():
 
     # skips the count if processing a svg file
     if session.get('type') == 'svg':
+
         return jsonify('Finished')
+    # else: proceed with the counter
+    elif session.get('type') == 'gexf':
 
-    # get the global dict counter
-    global images_counter
-    images_processed = images_counter[session.get('id')]
+        # get the global dict counter
+        global images_counter
+        images_processed = images_counter[session.get('id')]
 
-    # if the process already started
-    if images_processed != 'Analyzing file':
-        result = images_processed.split(" of ")
-        completed = result[0]
-        total = result[1]
+        # if the process already started
+        if images_processed != 'Analyzing file':
+            result = images_processed.split(" of ")
+            completed = result[0]
+            total = result[1]
 
-        # if completed, return finish to display the results on th frontend
-        if completed == total:
-            return jsonify('Finished')
+            # if completed, return finish to display the results on th frontend
+            if completed == total:
+                return jsonify('Finished')
+            else:
+                return jsonify(images_processed)
+
+        # returns just so the function wont return a error
         else:
             return jsonify(images_processed)
-
-    # returns just so the function wont return a error
-    else:
-        return jsonify(images_processed)
 
 
 def get_random_string(length):
