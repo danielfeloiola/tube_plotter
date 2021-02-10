@@ -121,10 +121,14 @@ def results():
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
+    # # DEBUG:
+    print(session.get('type'))
+
     # skips the count if processing a svg file
     if session.get('type') == 'svg':
 
         return jsonify('Finished')
+
     # else: proceed with the counter
     elif session.get('type') == 'gexf':
 
