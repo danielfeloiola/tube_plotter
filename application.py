@@ -54,7 +54,7 @@ def index():
 
             # generate a ramdom string as a session id
             session['id'] = get_random_string(12)
-            session['type'] = 'none yet'
+            session['type'] = 'none'
 
 
         # get the file uploaded file
@@ -67,7 +67,7 @@ def index():
         filename = f.filename
         if filename != '':
             file_ext = os.path.splitext(filename)[1]
-            print("DEBUG: extensio >>>>>>> " + file_ext)
+            print("DEBUG: extension >>>>>>> " + file_ext)
 
             # if the file type is not supported show an error message
             if file_ext not in app.config['UPLOAD_EXTENSIONS']:
@@ -83,7 +83,7 @@ def index():
 
         # if a graph file is uploaded, also sets up the counter
         if file_ext == '.gexf':
-            print("DEBUG: gexf path >>>>>>> ")
+            print("DEBUG: <<<<<<< gexf path >>>>>>> ")
 
             # set the counter to indicate the analysis started
             images_counter[session.get('id')] = 'Analyzing file'
@@ -100,7 +100,7 @@ def index():
         # if a svg file is uploaded, just get the name and start
         elif file_ext == '.svg':
 
-            print("DEBUG: svg path >>>>>>> ")
+            print("DEBUG <<<<<<<<< svg path >>>>>>> ")
 
             # get the path for the uploaded file
             uploaded_file = 'static/uploads/' + filename
@@ -131,8 +131,9 @@ def counter():
     print("DEBUG: >>>>>>>>>>>>>>>" + session.get('type'))
 
     # skips the count if processing a svg file
+    # reset the session type for the next query
     if session.get('type') == 'svg':
-
+        session['type'] = 'none'
         return jsonify('Finished')
 
     # else: proceed with the counter
@@ -148,8 +149,9 @@ def counter():
             completed = result[0]
             total = result[1]
 
-            # if completed, return finish to display the results on th frontend
+            # if completed, then clean session for next query return finished to display the results on th frontend
             if completed == total:
+                session['type'] = 'none'
                 return jsonify('Finished')
             else:
                 return jsonify(images_processed)
