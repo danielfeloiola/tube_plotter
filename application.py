@@ -88,7 +88,7 @@ def index():
             # set the counter to indicate the analysis started
             images_counter[session.get('id')] = 'Analyzing file'
             session['type'] = 'gexf'
-            print(session['type'])
+            print("DEBUG: <<<<<<< session type >>>>>>" + session['type'])
 
             # run plotter
             from plotter import img_plotter
