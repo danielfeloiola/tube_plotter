@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             xhr2.open('POST', conterUrl);
             xhr2.send();
 
-            var username = '<%= Session["UserName"] %>';
+            var username = '<%= Session["type"] %>';
             alert(username );
 
         }
