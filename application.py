@@ -43,19 +43,19 @@ def index():
 
     if request.method == 'GET':
 
+        # render the home page
+        return render_template('index.html')
+
+    elif request.method == 'POST':
+
+
         # if there is no session, make one
         if session.get('id') is None:
 
             # generate a ramdom string as a session id
-            id = get_random_string(12)
-            session['id'] = id
-            session['type'] = 'none yet'
+            session['id'] = get_random_string(12)
+            #session['type'] = 'none yet'
 
-        # render the home page
-        return render_template('index.html')
-
-
-    elif request.method == 'POST':
 
         # get the file uploaded file
         f = request.files['file']
