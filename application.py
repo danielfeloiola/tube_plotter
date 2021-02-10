@@ -26,11 +26,11 @@ app.config['UPLOAD_PATH'] = 'static/uploads'
 app.config['SECRET_KEY'] = os.getenv("KEY")
 
 # Configure session to use filesystem (instead of signed cookies)
-app.config['SESSION_FILE_DIR'] = mkdtemp()
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_COOKIE_SECURE'] = True
-Session(app)
+#app.config['SESSION_FILE_DIR'] = mkdtemp()
+#app.config['SESSION_PERMANENT'] = False
+#app.config['SESSION_TYPE'] = 'filesystem'
+#app.config['SESSION_COOKIE_SECURE'] = True
+#Session(app)
 
 # Ensure responses aren't cached
 @app.after_request
@@ -122,7 +122,6 @@ def results():
 @app.route('/counter', methods=['POST'])
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
-
 
     # if it's a svg file being analyzed, skip the counter
     if session.get('type') == 'svg':
