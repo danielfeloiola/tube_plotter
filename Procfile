@@ -1,1 +1,1 @@
-web: gunicorn --threads=2 application:app --timeout 200000 --keep-alive 200
+web: gunicorn application:app --timeout 200000 --keep-alive 200
