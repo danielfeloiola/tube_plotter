@@ -92,6 +92,7 @@ def index():
 
             # set the counter to indicate the analysis started
             images_counter[session.get('id')] = 'Analyzing file'
+            session['type'] = 'gexf'
 
             # run plotter
             from plotter import img_plotter
@@ -108,6 +109,7 @@ def index():
 
             # adjust session so it won't count images if svg file is uploaded
             session['type'] = 'svg'
+            print("third: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('type'))
 
             # call plotter function
             svg_plotter(uploaded_file, session["file_url"])
@@ -128,7 +130,7 @@ def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
     # if it's a svg file being analyzed, skip the counter
-    print("third: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('type'))
+
     #print("SECOND: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session['type'])
     #print("FIRST: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('type'))
 
