@@ -61,8 +61,8 @@ def index():
     elif request.method == 'POST':
 
         # DEBUG:
-        print("FIRST: " + session.get('id'))
-        print("SECOND: " + session['id'])
+        print("FIRST: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('id'))
+        print("SECOND: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session['id'])
 
         # get the file uploaded file
         f = request.files['file']
