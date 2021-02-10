@@ -84,6 +84,7 @@ def index():
 
             # save the file
             f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+            print(os.path.join(app.config['UPLOAD_PATH'], filename))
 
         # if the file has no name, return a warning
         else:
@@ -138,7 +139,7 @@ def results():
     return render_template('result.html')
 
 
-@app.route('/counter', methods=['POST'])
+@app.route('/counter') #, methods=['POST']
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
