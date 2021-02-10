@@ -89,6 +89,8 @@ def index():
             images_counter[session.get('id')] = 'Analyzing file'
             session['type'] = 'gexf'
             print("DEBUG: <<<<<<< session type >>>>>>" + session['type'])
+            if session['type'] == 'gexf':
+                print("YES!!!!!!!!!!")
 
             # run plotter
             from plotter import img_plotter
@@ -129,6 +131,9 @@ def counter():
 
     # # DEBUG:
     print("DEBUG: >>>>>>>>>>>>>>>" + session['type'])
+
+    if session['type'] == 'gexf':
+        print("YES!!!!!!!!!!")
 
     # skips the count if processing a svg file
     # reset the session type for the next query
