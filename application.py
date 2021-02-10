@@ -128,16 +128,16 @@ def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
     # # DEBUG:
-    print("DEBUG: >>>>>>>>>>>>>>>" + session.get('type'))
+    print("DEBUG: >>>>>>>>>>>>>>>" + session['type'])
 
     # skips the count if processing a svg file
     # reset the session type for the next query
-    if session.get('type') == 'svg':
+    if session['type'] == 'svg':
         session['type'] = 'none'
         return jsonify('Finished')
 
     # else: proceed with the counter
-    elif session.get('type') == 'gexf':
+    elif session['type'] == 'gexf':
 
         # get the global dict counter
         global images_counter
