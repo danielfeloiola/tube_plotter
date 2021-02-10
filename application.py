@@ -24,15 +24,15 @@ app.config['UPLOAD_PATH'] = 'static/uploads'
 
 # Setting the secret key
 #app.config['SECRET_KEY'] = os.getenv("KEY")
-app.secret_key = os.getenv("KEY")
+app.secret_key = 'lksudhfgiuwehrfgsdfyugvjhdskfbvjkdsgfyjhes'
 #''.join(random.choice(string.ascii_letters) for i in range(25))
 
 # Configure session to use filesystem (instead of signed cookies)
 #app.config['SESSION_FILE_DIR'] = mkdtemp()
 #app.config['SESSION_PERMANENT'] = False
 #app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_COOKIE_SECURE'] = True
-Session(app)
+#app.config['SESSION_COOKIE_SECURE'] = True
+#Session(app)
 
 # Ensure responses aren't cached
 @app.after_request
