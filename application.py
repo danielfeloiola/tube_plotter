@@ -55,6 +55,7 @@ def index():
             # generate a ramdom string as a session id
             id = get_random_string(12)
             session['id'] = id
+            session['type'] = ''
 
         # render the home page
         return render_template('index.html')
@@ -63,8 +64,8 @@ def index():
     elif request.method == 'POST':
 
         # DEBUG:
-        print("FIRST: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('id'))
-        print("SECOND: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session['id'])
+        #print("FIRST: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('id'))
+        #print("SECOND: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session['id'])
 
         # get the file uploaded file
         f = request.files['file']
