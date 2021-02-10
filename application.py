@@ -54,7 +54,7 @@ def index():
 
             # generate a ramdom string as a session id
             session['id'] = get_random_string(12)
-            #session['type'] = 'none yet'
+            session['type'] = 'none yet'
 
 
         # get the file uploaded file
@@ -67,6 +67,7 @@ def index():
         filename = f.filename
         if filename != '':
             file_ext = os.path.splitext(filename)[1]
+            print("DEBUG: extensio >>>>>>> " + file_ext)
 
             # if the file type is not supported show an error message
             if file_ext not in app.config['UPLOAD_EXTENSIONS']:
@@ -82,10 +83,12 @@ def index():
 
         # if a graph file is uploaded, also sets up the counter
         if file_ext == '.gexf':
+            print("DEBUG: gexf path >>>>>>> ")
 
             # set the counter to indicate the analysis started
             images_counter[session.get('id')] = 'Analyzing file'
             session['type'] = 'gexf'
+            print(session['type'])
 
             # run plotter
             from plotter import img_plotter
@@ -97,11 +100,14 @@ def index():
         # if a svg file is uploaded, just get the name and start
         elif file_ext == '.svg':
 
+            print("DEBUG: svg path >>>>>>> ")
+
             # get the path for the uploaded file
             uploaded_file = 'static/uploads/' + filename
 
             # adjust session so it won't count images if svg file is uploaded
             session['type'] = 'svg'
+            print(session['type'])
 
             # call plotter function
             svg_plotter(uploaded_file, session["file_url"])
