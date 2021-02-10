@@ -94,6 +94,10 @@ def index():
         # if a graph file is uploaded, also sets up the counter
         if file_ext == '.gexf':
 
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print("gefx path")
+            print(file_ext)
+
             # set the counter to indicate the analysis started
             images_counter[session.get('id')] = 'Analyzing file'
             session['type'] = 'gexf'
@@ -107,6 +111,10 @@ def index():
 
         # if a svg file is uploaded, just get the name and start
         elif file_ext == '.svg':
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print("svg path")
+            print(file_ext)
 
             # get the path for the uploaded file
             uploaded_file = 'static/uploads/' + filename
