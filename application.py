@@ -130,8 +130,8 @@ def counter():
 
     # get the global dict counter
     global images_counter
-
-    images_processed = images_counter[session.get('id')]
+    id = session.get('id')
+    images_processed = images_counter[id]
 
     # if the process already started
     if images_processed != 'Analyzing file':
