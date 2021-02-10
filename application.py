@@ -21,18 +21,12 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.gexf', '.svg']
 app.config['UPLOAD_PATH'] = 'static/uploads'
+app.config['SESSION_COOKIE_SECURE'] = True
 
 # Setting the secret key
 #app.config['SECRET_KEY'] = os.getenv("KEY")
-app.secret_key = 'lksudhfgiuwehrfgsdfyugvjhdskfbvjkdsgfyjhes'
-#''.join(random.choice(string.ascii_letters) for i in range(25))
+app.secret_key = os.getenv("KEY")
 
-# Configure session to use filesystem (instead of signed cookies)
-#app.config['SESSION_FILE_DIR'] = mkdtemp()
-#app.config['SESSION_PERMANENT'] = False
-#app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_COOKIE_SECURE'] = True
-#Session(app)
 
 # Ensure responses aren't cached
 @app.after_request
@@ -55,17 +49,13 @@ def index():
             # generate a ramdom string as a session id
             id = get_random_string(12)
             session['id'] = id
-            session['type'] = 'none'
+            session['type'] = 'none yet'
 
         # render the home page
         return render_template('index.html')
 
 
     elif request.method == 'POST':
-
-        # DEBUG:
-        #print("FIRST: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('id'))
-        #print("SECOND: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session['id'])
 
         # get the file uploaded file
         f = request.files['file']
@@ -89,15 +79,9 @@ def index():
         else:
             return jsonify('Check filename')
 
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print(file_ext)
 
         # if a graph file is uploaded, also sets up the counter
         if file_ext == '.gexf':
-
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            print("gefx path")
-            print(file_ext)
 
             # set the counter to indicate the analysis started
             images_counter[session.get('id')] = 'Analyzing file'
@@ -113,16 +97,11 @@ def index():
         # if a svg file is uploaded, just get the name and start
         elif file_ext == '.svg':
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            print("svg path")
-            print(file_ext)
-
             # get the path for the uploaded file
             uploaded_file = 'static/uploads/' + filename
 
             # adjust session so it won't count images if svg file is uploaded
             session['type'] = 'svg'
-            print("third: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('type'))
 
             # call plotter function
             svg_plotter(uploaded_file, session["file_url"])
@@ -142,21 +121,13 @@ def results():
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
-    # if it's a svg file being analyzed, skip the counter
-    print("1: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('type'))
-    print("2: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session['type'])
-
-
-
+    # skips the count if processing a svg file
     if session.get('type') == 'svg':
         return jsonify('Finished')
 
-
     # get the global dict counter
     global images_counter
-    print("3: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + session.get('id'))
-    id = session.get('id')
-    images_processed = images_counter[id]
+    images_processed = images_counter[session.get('id')]
 
     # if the process already started
     if images_processed != 'Analyzing file':
@@ -179,7 +150,6 @@ def get_random_string(length):
     '''Makes a random string for the user id'''
 
     return ''.join(random.choice(string.ascii_letters) for i in range(length))
-    #return result_str
 
 
 @app.route("/demo", methods=["GET"])
