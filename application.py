@@ -122,7 +122,7 @@ def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
     # # DEBUG:
-    print(session.get('type'))
+    print("DEBUG: >>>>>>>>>>>>>>>" + session.get('type'))
 
     # skips the count if processing a svg file
     if session.get('type') == 'svg':
