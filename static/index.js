@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
 
-
         // send the reqeust
         xhr.open('POST', url);
         xhr.send(formData);
@@ -99,8 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // make the request to get the progress
             xhr2.open('GET', conterUrl);
             xhr2.send();
-
-
 
         }
 

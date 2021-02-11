@@ -69,9 +69,6 @@ def index():
                 return jsonify('Please check file extension')
 
             # save the file
-            ###############################################################
-            # PRECISA SER ALTERADO CASO USUARIOS DIFERENTES MANDEM ARQUIVOS COM O MESMO NOME?
-            ###############################################################
             f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
 
         # if the file has no name, return a warning

@@ -14,9 +14,6 @@ import shutil
 # import the application counter
 from application import images_counter, session
 
-# # TODO:
-# fix sys.exit errors > show to the user
-
 
 def img_plotter(filename):
 
@@ -42,13 +39,22 @@ def img_plotter(filename):
 
     #outputfilename = os.path.join(os.path.dirname(settings['input']), "visual_" + os.path.basename(str(id)).split(".")[0] + ".svg")
     outputfilename = session["file_url"]
+
+
+
     print(outputfilename)
+
+
 
     imgresizedim = settings['resizew'], settings['resizeh']
     imgdrawdim = settings['dispw'], settings['disph']
 
     #print("Input file:", settings['input'])
+
+
     ingexf = et.parse('static/uploads/' + filename)
+
+
     print("Input file:", ingexf)
 
     # ------------------------------------------
@@ -104,7 +110,6 @@ def img_plotter(filename):
     maxx = 0
     miny = 0
     maxy = 0
-
 
 
     for node in nodes:
