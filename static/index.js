@@ -92,12 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
+            //var sessionType = document.getElementById("type").innerHTML;
+            //var username = "{{ session['type'] }}";
+            // alert(sessionType);
+
             // make the request to get the progress
-            xhr2.open('POST', conterUrl);
+            xhr2.open('GET', conterUrl);
             xhr2.send();
 
-            var username = "{{ session['type'] }}";
-            alert(username);
+
 
         }
 

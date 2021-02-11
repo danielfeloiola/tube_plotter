@@ -18,7 +18,7 @@ from application import images_counter, session
 # fix sys.exit errors > show to the user
 
 
-def img_plotter(id, filename):
+def img_plotter(filename):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
