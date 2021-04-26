@@ -4,6 +4,12 @@
 def svg_plotter(file, output_file):
     '''plots the video thumbnails on a svg file'''
 
+
+
+    #
+    # ADD THE DOWNLOAD MODE
+    #
+
     # Needed to find the substrings
     # necessario para encontrar substrings
     import re
