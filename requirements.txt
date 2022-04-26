@@ -1,6 +1,7 @@
-Flask
-Flask-Session
-requests
-svgwrite
-Pillow
-gunicorn
+Flask==2.1.1
+Flask-Session==0.4.0
+requests==2.25.1
+svgwrite==1.4.2
+Pillow==8.2.0
+gunicorn==20.0.4
+python-dotenv==0.15.0

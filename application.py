@@ -1,12 +1,9 @@
-from flask import Flask, jsonify, redirect, render_template, request, session
-from werkzeug.utils import secure_filename
-from flask_session import Session
-from datetime import timedelta, datetime
+from flask import Flask, jsonify, render_template, session, request #redirect.
+#from werkzeug.utils import secure_filename
+#from flask_session import Session
+#from datetime import timedelta, datetime
 import os, random, string
-from tempfile import mkdtemp
-
-# import the svg plotter
-from svg_plot import svg_plotter
+#from tempfile import mkdtemp
 
 # dict to count images
 images_counter = dict()
@@ -14,18 +11,17 @@ images_counter = dict()
 # Configure application
 app = Flask(__name__)
 
-# Ensure templates are auto-reloaded
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-
 # Uploads settings
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.gexf', '.svg']
 app.config['UPLOAD_PATH'] = 'static/uploads'
 app.config['SESSION_COOKIE_SECURE'] = True
 
 # Setting the secret key
-#app.config['SECRET_KEY'] = os.getenv("KEY")
 app.secret_key = os.getenv("KEY")
+
+print("Debugger test")
 
 
 # Ensure responses aren't cached
@@ -43,10 +39,8 @@ def index():
 
     if request.method == 'GET':
 
-        # set an unique id for each user
+        # make an id and render the page
         session['id'] = get_random_string(12)
-
-        # render the home page
         return render_template('index.html')
 
     elif request.method == 'POST':
@@ -54,24 +48,23 @@ def index():
         # get the file uploaded file
         f = request.files['file']
 
-        # sets the output file name and stores in the session
-        session["file_url"] = "static/uploads/visual_" + session.get('id') + ".svg"
+        # make directories and add them to the cookies for later
+        images_folder = f"static/images/{session.get('id')}"
+        directory = os.mkdir(images_folder)
+        session["file_url"] = "static/svg/visual_" + session.get('id') + ".svg"
+        session["zip_url"] = "static/images/" + session.get('id') + ".zip"
 
-        # check filename and extension
+        # check filename and extension: if the file has a name
         filename = f.filename
         if filename != '':
 
-            # get the file extension
+            # get the file extension and check id its supported, if so then save
             file_ext = os.path.splitext(filename)[1]
-
-            # if the file type is not supported show an error message
             if file_ext not in app.config['UPLOAD_EXTENSIONS']:
                 return jsonify('Please check file extension')
-
-            # save the file
             f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
 
-        # if the file has no name, return a warning
+        # else if the file has no name, return a warning
         else:
             return jsonify('Check filename')
 
@@ -84,7 +77,7 @@ def index():
 
             # run plotter
             from plotter import img_plotter
-            img_plotter(filename)
+            img_plotter(filename, images_folder)
 
             # return nothing
             return('', 204)
@@ -98,7 +91,8 @@ def index():
             # adjust session so it won't count images if svg file is uploaded
             images_counter[session.get('id')] = 'skip'
 
-            # call plotter function
+            # import the svg plotter and run
+            from svg_plot import svg_plotter
             svg_plotter(uploaded_file, session["file_url"])
 
             # return nothing
@@ -107,7 +101,13 @@ def index():
 
 @app.route('/results', methods=['GET'])
 def results():
-    '''Render a page with the SVG file'''
+    '''Render a page with the SVG file. Zips the folder for download'''
+
+
+    import shutil
+    # the zip will live inside the images folder too
+    name = f"static/images/{session.get('id')}"
+    shutil.make_archive(name, 'zip', name)
 
     return render_template('result.html')
 
