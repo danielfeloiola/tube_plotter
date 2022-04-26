@@ -1,0 +1,44 @@
+.navbar
+{
+    /*background-color: white !important;*/
+    position: fixed;
+}
+
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+/* colors for brand */
+nav .navbar-brand .red
+{
+    color: red;
+    font-family: monospace;
+}
+
+main
+{
+    overflow-x: auto;
+    text-align: center;
+    max-width: 100%;
+}
+.container
+{
+    max-width: 100%;
+}
+
+#maindiv
+{
+    margin-top: 10%;
+}
+
+footer
+{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    padding: 10px;
+}
