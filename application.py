@@ -16,10 +16,12 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.gexf', '.svg']
 app.config['UPLOAD_PATH'] = 'static/uploads'
+app.config["SESSION_PERMANENT"] = True
 app.config['SESSION_COOKIE_SECURE'] = True
 
 # Setting the secret key
-app.secret_key = os.getenv("KEY")
+#app.secret_key = os.getenv("KEY")
+app.secret_key = "adfjweoiu4r2skjldnflkjwnrgkj"
 
 print("Debugger test")
 
@@ -41,18 +43,28 @@ def index():
 
         # make an id and render the page
         session['id'] = get_random_string(12)
-        return render_template('index.html')
+        #print("INDEX GET: " + session.get('id'))
+        return render_template('index.html', id = session.get('id'))
 
     elif request.method == 'POST':
 
         # get the file uploaded file
         f = request.files['file']
 
+        # if there is already a session id, then get a new one
+        if not session.get('id'):
+            session['id'] = get_random_string(12)
+        #print("INDEX POST:" + session.get('id'))
+
         # make directories and add them to the cookies for later
         images_folder = f"static/images/{session.get('id')}"
         directory = os.mkdir(images_folder)
         session["file_url"] = "static/svg/visual_" + session.get('id') + ".svg"
         session["zip_url"] = "static/images/" + session.get('id') + ".zip"
+
+
+        print("DEBUG-1: " + session.get("zip_url"))
+        print("DEBUG-2: " + session.get("file_url"))
 
         # check filename and extension: if the file has a name
         filename = f.filename
@@ -112,39 +124,30 @@ def results():
     return render_template('result.html')
 
 
-@app.route('/counter', methods=['GET', 'POST'])
+@app.route('/counter', methods=['POST'])
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
     # get the global dict counter
-    global images_counter
+    global images_counter    
+    images_processed = images_counter[request.data.decode()]
 
-    # if uploading a svg file, skip the countig and show the result link
-    if images_counter[session.get('id')] == 'skip':
-        return jsonify('Finished')
+    # if the process already started
+    if images_processed != 'Analyzing file':
+        result = images_processed.split(" of ")
+        completed = result[0]
+        total = result[1]
 
-    # if uploading a gexf, do the counting
-    else:
+        # if completed return finished to display the results
+        if completed == total:
+            return jsonify('Finished')
 
-        # look into the dict for the id
-        images_processed = images_counter[session.get('id')]
-
-        # if the process already started
-        if images_processed != 'Analyzing file':
-            result = images_processed.split(" of ")
-            completed = result[0]
-            total = result[1]
-
-            # if completed return finished to display the results
-            if completed == total:
-                return jsonify('Finished')
-
-            else:
-                return jsonify(images_processed)
-
-        # returns just so the function wont return a error
         else:
             return jsonify(images_processed)
+
+    # returns just so the function wont return a error
+    else:
+        return jsonify(images_processed)
 
 
 def get_random_string(length):

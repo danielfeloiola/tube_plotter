@@ -19,6 +19,7 @@ def img_plotter(filename, images_folder):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
+    print("DEBUG-PLOTTER: " + session.get('id'))
 
     settings = {'input': 'static/uploads/espacializado.gexf',
                 'inimgdir': 'static/uploads/espacializado.gexf',

@@ -92,8 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // make the request to get the progress
-            xhr2.open('GET', conterUrl);
-            xhr2.send();
+            xhr2.open('POST', conterUrl, true);
+
+
+            const id = document.getElementById("id").innerHTML;
+            console.log(id);
+
+            
+            xhr2.send(id);
 
         }
 
