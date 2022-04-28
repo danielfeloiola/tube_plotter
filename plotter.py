@@ -12,10 +12,10 @@ import requests
 import shutil
 
 # import the application counter
-from application import session, engine, db, Progress#, images_counter
+from application import session, images_counter#, engine, db, Progress
 
 
-def img_plotter(filename, images_folder):
+def img_plotter(filename, images_folder, file_url, s_id):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
@@ -38,6 +38,7 @@ def img_plotter(filename, images_folder):
     #-------------------------------------------
 
     outputfilename = session["file_url"]
+    #outputfilename = file_url ## <<<<<<<<<<<<<<<
 
     imgresizedim = settings['resizew'], settings['resizeh']
     imgdrawdim = settings['dispw'], settings['disph']
@@ -46,7 +47,22 @@ def img_plotter(filename, images_folder):
     ingexf = et.parse('static/uploads/' + filename)
 
 
-    print("Input file:", ingexf)
+    #print("Input file:", ingexf)
+
+
+
+
+
+
+    #print(f" DEBUG PLOTTER s_id: {s_id}")
+    print(f" DEBUG PLOTTER s_id: {session['id']}")
+
+
+
+
+
+
+
 
     # ------------------------------------------
     # Create output dir
@@ -158,9 +174,13 @@ def img_plotter(filename, images_folder):
         # Update progress
         curimg += 1
 
-        # add to the database
-        db.query(Progress).filter(Progress.session_id == session["id"]).update({'progress': curimg, 'total': numimages})
-        db.commit()
+        # add the number of processed images to the variable
+        images_counter[session.get('id')] = f'{curimg} of {numimages}'
+
+        # add to the database  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        #db.query(Progress).filter(Progress.session_id == s_id).update({'progress': curimg, 'total': numimages})
+        #db.query(Progress).filter(Progress.session_id == session['id']).update({'progress': curimg, 'total': numimages})
+        #db.commit()
 
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 

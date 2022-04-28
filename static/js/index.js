@@ -15,7 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // collect files
         const files = document.querySelector('[name=file]').files;
         const formData = new FormData();
+        const generateRandomString = (length=6)=>Math.random().toString(20).substr(2, length)
+        const randString = generateRandomString(12);
+        console.log(randString);
+
+        // add to the form
         formData.append('file', files[0]);
+        formData.append('string', randString);
+
+        document.getElementById("id").innerHTML = randString;
+        document.getElementById("infodiv").innerHTML = "Starting...";
 
         // send the file using a XML request
         const xhr = new XMLHttpRequest();
@@ -42,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(interval);
                 document.getElementById("infodiv").innerHTML = "Error: Please upload a GEFX file";
                 document.getElementById("resultdiv").innerHTML = "";
-            }
+            } 
+                
         };
 
 
@@ -96,10 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             const id = document.getElementById("id").innerHTML;
-            console.log(id);
+            //console.log(id);
 
             
-            xhr2.send(id);
+            xhr2.send(randString);
 
         }
 

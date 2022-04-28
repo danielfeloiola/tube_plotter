@@ -1,6 +1,6 @@
 # important stuff
 from flask import Flask, jsonify, render_template, session, request
-import os, random, string
+import os #, string
 
 # SQLAlchemy for the database LOL
 from sqlalchemy import create_engine, Column, Integer, String
@@ -37,6 +37,10 @@ class Progress(Base):
 Base.metadata.create_all(bind=engine)
 
 
+# dict to count images
+images_counter = dict()
+
+
 # Configure application
 app = Flask(__name__)
 
@@ -65,28 +69,34 @@ def index():
     '''Show the main page with instructions'''
 
     if request.method == 'GET':
-        return render_template('index.html', id = session.get('id'))
+        return render_template('index.html')
 
     elif request.method == 'POST':
 
         # get the file uploaded file
         f = request.files['file']
+        s_id = request.form['string']
 
-        # if there is already a session id, then get a new one
-        #if not session.get('id'):
-        #    session['id'] = get_random_string(12)
+        # add id to the session
+        session['id'] = s_id
 
-        # make an id add it to the db to track progress
-        session['id'] = get_random_string(12)
-        progress = Progress(session_id=f"{session['id']}", progress=0, total=0)
-        db.add(progress)
-        db.commit()
+        # add to the db
+        #progress = Progress(session_id=f"{s_id}", progress=0, total=0)
+        #db.add(progress)
+        #db.commit()
 
         # make directories and add them to the cookies for later
-        images_folder = f"static/images/{session.get('id')}"
+        images_folder = f"static/images/{s_id}"
         directory = os.mkdir(images_folder)
-        session["file_url"] = "static/svg/visual_" + session.get('id') + ".svg"
-        session["zip_url"] = "static/images/" + session.get('id') + ".zip"
+
+
+        file_url =  s_id + ".svg"
+        session["file_url"] = "static/svg/visual_" + s_id + ".svg"
+        session["zip_url"] = "static/images/" + s_id + ".zip"
+
+        print("URLS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(session["file_url"])
+        print(session["zip_url"])
 
         # check filename and extension: if the file has a name
         filename = f.filename
@@ -107,10 +117,10 @@ def index():
 
             # run plotter - return nothing while it works 
             from plotter import img_plotter
-            img_plotter(filename, images_folder)
+            img_plotter(filename, images_folder, file_url, s_id)
 
             # return nothing
-            return('', 204)
+            return jsonify(f'Finishing...')# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         elif file_ext == '.svg':
 
@@ -119,7 +129,7 @@ def index():
 
             # import the svg plotter and run
             from svg_plot import svg_plotter
-            svg_plotter(uploaded_file, session["file_url"])
+            svg_plotter(uploaded_file, file_url)
 
             # return nothing
             return('', 204)
@@ -129,10 +139,8 @@ def index():
 def results():
     '''Render a page with the SVG file. Zips the folder for download'''
 
-
     import shutil
-    # the zip will live inside the images folder too
-    name = f"static/images/{session.get('id')}"
+    name = f"static/images/{session['id']}"
     shutil.make_archive(name, 'zip', name)
 
     return render_template('result.html')
@@ -142,26 +150,43 @@ def results():
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
-    progress = db.query(Progress).filter(Progress.session_id==request.data.decode()).first()
+    #progress = db.query(Progress).filter(Progress.session_id==request.data.decode()).first()
+    
+
+
+
+    # get the global dict counter
+    global images_counter
+
+   
+    # if uploading a gexf, do the counting
+    #else:
+
+    # look into the dict for the id
+    images_processed = images_counter[request.data.decode()]
+    result = images_processed.split(" of ")
+    completed = result[0]
+    total = result[1]
+
+    # if completed return finished to display the results
+    if completed == total:
+        return jsonify('Finished')
+
+    else:
+        return jsonify(images_processed)
+
+        
   
-  
-  
-    print("DEBUG - PROGRESS & TOTAL VAR: " + str(progress.progress) + " of " + str(progress.total) + " from " + request.data.decode())
+    # print("DEBUG - PROGRESS & TOTAL VAR: " + str(progress.progress) + " of " + str(progress.total) + " from " + request.data.decode())
 
   
 
     # if completed return finished to display the results
-    if progress.progress == progress.total and progress.total != 0:
-        return jsonify('Finished')
-
-    else:
-        return jsonify(f"{progress.progress} of {progress.total}")
-
-
-def get_random_string(length):
-    '''Makes a random string for the user id'''
-
-    return ''.join(random.choice(string.ascii_letters) for i in range(length))
+    #if progress.progress == progress.total and progress.total != 0:
+    #    return jsonify('Finished')
+    #
+    #else:
+    #    return jsonify(f"{progress.progress} of {progress.total}")
 
 
 @app.route("/demo", methods=["GET"])
