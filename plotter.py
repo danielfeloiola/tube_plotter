@@ -12,10 +12,10 @@ import requests
 import shutil
 
 # import the application counter
-from application import session, images_counter#, engine, db, Progress
+from application import session, images_counter
 
 
-def img_plotter(filename, images_folder, file_url, s_id):
+def img_plotter(filename, images_folder):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
@@ -45,23 +45,6 @@ def img_plotter(filename, images_folder, file_url, s_id):
 
     # ARQUIVO GEXF DE ENTRADA
     ingexf = et.parse('static/uploads/' + filename)
-
-
-    #print("Input file:", ingexf)
-
-
-
-
-
-
-    #print(f" DEBUG PLOTTER s_id: {s_id}")
-    print(f" DEBUG PLOTTER s_id: {session['id']}")
-
-
-
-
-
-
 
 
     # ------------------------------------------
@@ -176,11 +159,6 @@ def img_plotter(filename, images_folder, file_url, s_id):
 
         # add the number of processed images to the variable
         images_counter[session.get('id')] = f'{curimg} of {numimages}'
-
-        # add to the database  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        #db.query(Progress).filter(Progress.session_id == s_id).update({'progress': curimg, 'total': numimages})
-        #db.query(Progress).filter(Progress.session_id == session['id']).update({'progress': curimg, 'total': numimages})
-        #db.commit()
 
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
