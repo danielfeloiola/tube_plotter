@@ -12,7 +12,7 @@ import requests
 import shutil
 
 # import the application counter
-from application import images_counter, session
+from application import images_counter, session, engine, db, Progress
 
 
 def img_plotter(filename, images_folder):
@@ -164,8 +164,11 @@ def img_plotter(filename, images_folder):
 
         curimg += 1
 
-        # add the number of processed images to the variable
-        images_counter[session.get('id')] = f'{curimg} of {numimages}'
+        # add to the database
+        images_counter = f'{curimg} of {numimages}'
+        db.query(Progress).filter(Progress.session_id == session["id"]).update({'progress': curimg, 'total': numimages})
+        db.commit()
+
 
         innodex = (float(node.find("viz:position", viz).get('x'))-minx)/inw
         innodey = (float(node.find("viz:position", viz).get('y'))-miny)/inh
@@ -229,7 +232,8 @@ def img_plotter(filename, images_folder):
 
                 imgfp = imgfile
 
-            print("\tPlotting image: ", images_counter[session.get('id')])
+            #print("\tPlotting image: ", images_counter[session.get('id')])
+            print("\tPlotting image: ", images_counter)
 
             link = outsvg.add(outsvg.a(linkUrl,id=nodeid))
             image = link.add(outsvg.image(imgfp, insert=(outnodex, outnodey), size=imgdrawdim))

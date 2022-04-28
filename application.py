@@ -5,6 +5,71 @@ from flask import Flask, jsonify, render_template, session, request #redirect.
 import os, random, string
 #from tempfile import mkdtemp
 
+# SQLAlchemy for the database LOL
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+from sqlalchemy.ext.declarative import declarative_base
+
+
+#from sqlalchemy import create_engine
+#from sqlalchemy.orm import scoped_session, sessionmaker
+
+
+#engine = create_engine('sqlite:////tmp/test.db')
+#db_session = scoped_session(sessionmaker(autocommit=False,
+#                                         autoflush=False,
+#                                         bind=engine))
+#)
+
+
+
+
+
+
+
+
+
+
+
+# Check for db url variable
+if not os.getenv("DATABASE_URL"):
+    raise RuntimeError("DATABASE_URL is not set")
+
+
+
+# Set up database
+engine = create_engine(os.getenv("DATABASE_URL"))
+db = scoped_session(sessionmaker(autocommit=False,
+                                 autoflush=False,
+                                 bind=engine))
+
+
+Base = declarative_base()
+Base.query = db.query_property()
+
+
+
+class Progress(Base):
+    __tablename__ = 'progress_table'
+    id = Column(Integer, primary_key=True)
+    session_id = Column(String, unique=True)
+    progress = Column(Integer)
+    total = Column(Integer)
+
+    
+
+#def init_db():
+    # import all modules here that might define models so that
+    # they will be registered properly on the metadata.  Otherwise
+    # you will have to import them first before calling init_db()
+#    import yourapplication.models
+Base.metadata.create_all(bind=engine)
+
+
+#safe_list_db = db.execute("SELECT * FROM slist").fetchall()
+
+
 # dict to count images
 images_counter = dict()
 
@@ -20,11 +85,13 @@ app.config["SESSION_PERMANENT"] = True
 app.config['SESSION_COOKIE_SECURE'] = True
 
 # Setting the secret key
-#app.secret_key = os.getenv("KEY")
-app.secret_key = "adfjweoiu4r2skjldnflkjwnrgkj"
 
-print("Debugger test")
+#print("DEBUG: " + os.getenv("FLASK_DEBUG"))
+#print("DATABASE_URL: " + os.getenv("DATABASE_URL"))
+#print("KEY: " + os.getenv("SECRET_KEY"))
 
+app.secret_key = os.getenv("SECRET_KEY")
+#app.secret_key = "adfjweoiu4r2skjldnflkjwnrgkj"
 
 # Ensure responses aren't cached
 @app.after_request
@@ -43,6 +110,16 @@ def index():
 
         # make an id and render the page
         session['id'] = get_random_string(12)
+
+        # Store progress data in the DB
+        progress = Progress(session_id=f"{session['id']}", progress=0, total=0)
+        db.add(progress)
+        db.commit()
+
+        print("ADDED TO DB") # <<<<<<<<<<<<<<<<<<<><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        print(session.get("id"))
+
+
         #print("INDEX GET: " + session.get('id'))
         return render_template('index.html', id = session.get('id'))
 
@@ -54,6 +131,8 @@ def index():
         # if there is already a session id, then get a new one
         if not session.get('id'):
             session['id'] = get_random_string(12)
+
+           
         #print("INDEX POST:" + session.get('id'))
 
         # make directories and add them to the cookies for later
@@ -85,7 +164,7 @@ def index():
         if file_ext == '.gexf':
 
             # set the counter to indicate the analysis started
-            images_counter[session.get('id')] = 'Analyzing file'
+            #images_counter[session.get('id')] = 'Analyzing file' # <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
             # run plotter
             from plotter import img_plotter
@@ -129,25 +208,31 @@ def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
     # get the global dict counter
-    global images_counter    
-    images_processed = images_counter[request.data.decode()]
+    #global images_counter
+
+    progress = db.query(Progress).filter(Progress.session_id==request.data.decode()).first()
+    print("DEBUG - PROGRESS & TOTAL VAR: " + str(progress.progress) + " of " + str(progress.total) + " from " + request.data.decode())
+
+    #images_processed = images_counter[request.data.decode()]
 
     # if the process already started
-    if images_processed != 'Analyzing file':
-        result = images_processed.split(" of ")
-        completed = result[0]
-        total = result[1]
+    #if progress != 'Analyzing file':
+        #result = str(progress.split(" of "))
 
-        # if completed return finished to display the results
-        if completed == total:
-            return jsonify('Finished')
+    #completed = progress.progress
+    #total = result[1
 
-        else:
-            return jsonify(images_processed)
+    # if completed return finished to display the results
+    if progress.progress == progress.total and progress.total != 0:
+        return jsonify('Finished')
+
+    else:
+        return jsonify(f"{progress.progress} of {progress.total}")
 
     # returns just so the function wont return a error
-    else:
-        return jsonify(images_processed)
+    #else:
+        #return jsonify(progress)
+        #return jsonify(f"Processed images: {progress.progress} of {progress.total}")
 
 
 def get_random_string(length):
