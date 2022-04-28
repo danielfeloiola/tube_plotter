@@ -12,14 +12,13 @@ import requests
 import shutil
 
 # import the application counter
-from application import images_counter, session, engine, db, Progress
+from application import session, engine, db, Progress#, images_counter
 
 
 def img_plotter(filename, images_folder):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
-    print("DEBUG-PLOTTER: " + session.get('id'))
 
     settings = {'input': 'static/uploads/espacializado.gexf',
                 'inimgdir': 'static/uploads/espacializado.gexf',
@@ -38,17 +37,12 @@ def img_plotter(filename, images_folder):
     # Set internal variables
     #-------------------------------------------
 
-    #outputfilename = os.path.join(os.path.dirname(settings['input']), "visual_" + os.path.basename(str(id)).split(".")[0] + ".svg")
     outputfilename = session["file_url"]
-
-    #print(outputfilename)
 
     imgresizedim = settings['resizew'], settings['resizeh']
     imgdrawdim = settings['dispw'], settings['disph']
 
-    #print("Input file:", settings['input'])
-
-    #ARQUIVO GEXF DE ENTRADA  <<<<<
+    # ARQUIVO GEXF DE ENTRADA
     ingexf = et.parse('static/uploads/' + filename)
 
 
@@ -160,15 +154,15 @@ def img_plotter(filename, images_folder):
     curimg = 0
 
     for node in nodes:
-        typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
-
+        
+        # Update progress
         curimg += 1
 
         # add to the database
-        images_counter = f'{curimg} of {numimages}'
         db.query(Progress).filter(Progress.session_id == session["id"]).update({'progress': curimg, 'total': numimages})
         db.commit()
 
+        typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
         innodex = (float(node.find("viz:position", viz).get('x'))-minx)/inw
         innodey = (float(node.find("viz:position", viz).get('y'))-miny)/inh
@@ -198,17 +192,11 @@ def img_plotter(filename, images_folder):
         response = requests.get(imgfile, stream=True)
 
 
-       
-    
-
-        # Trying to save img to a different place ###########################
         with open(f'{images_folder}/{nodeid}.png', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
 
             # INFILE
-            #infile = nodeid + '.png'
             infile = f'{images_folder}/{nodeid}.png'
-
             # infile = "img.png" # alterando: cada imagem tera o nome do nodeid
 
             try:
@@ -229,11 +217,9 @@ def img_plotter(filename, images_folder):
                     print(exc)
                     continue
             else:
-
                 imgfp = imgfile
 
-            #print("\tPlotting image: ", images_counter[session.get('id')])
-            print("\tPlotting image: ", images_counter)
+            print("\tPlotting image: ", f'{curimg} of {numimages}')
 
             link = outsvg.add(outsvg.a(linkUrl,id=nodeid))
             image = link.add(outsvg.image(imgfp, insert=(outnodex, outnodey), size=imgdrawdim))
