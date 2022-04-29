@@ -11,14 +11,18 @@ import os, configparser, argparse, sys, platform, traceback
 import requests
 import shutil
 
+import bmemcached
+
 # import the application counter
-from application import session #, images_counter
+from application import session, mc #, images_counter
 
 
-def img_plotter(filename, images_folder):
+#mc = bmemcached.Client(servers, username=user, password=passw)
 
+#mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
 
-    print("DEBUG IMG_PLOTTER: " + session.get('id'))
+def img_plotter(filename, images_folder, s_id):
+
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
 
@@ -160,7 +164,13 @@ def img_plotter(filename, images_folder):
         curimg += 1
 
         # add the number of processed images to the variable
-        session['counter'] = f'{curimg} of {numimages}'
+        #global images_counter
+        mc.set(s_id, f"{curimg} of {numimages}")
+
+
+        #print("MEMCACHE DEBUG!!!")
+        #print(mc.get(session.get("id")))
+        #session['counter'] = f'{curimg} of {numimages}'
 
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
@@ -219,12 +229,15 @@ def img_plotter(filename, images_folder):
             else:
                 imgfp = imgfile
 
+            # DECOMMENT after debug #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             print("\tPlotting image: ", f'{curimg} of {numimages}')
 
             link = outsvg.add(outsvg.a(linkUrl,id=nodeid))
             image = link.add(outsvg.image(imgfp, insert=(outnodex, outnodey), size=imgdrawdim))
 
         outsvg.save(pretty=True)
+
+
 
 if __name__ == "__main__":
     img_plotter()
