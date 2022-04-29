@@ -99,7 +99,7 @@ def counter():
     if completed != total:
         return jsonify(f"{completed} of {total}")
     else:
-        return jsonify("Finished")
+        return jsonify("Finished - counter")
 
 
 
