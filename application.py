@@ -1,10 +1,7 @@
 # important stuff
-from flask import Flask, jsonify, render_template, session, request
-from flask_session import Session
+from flask import Flask, jsonify, render_template, request #session
+#from flask_session import Session
 import os, shutil, bmemcached
-
-# dict to count images
-images_counter = dict()
 
 # Configure application
 app = Flask(__name__)
@@ -14,9 +11,6 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.gexf', '.svg']
 app.config['UPLOAD_PATH'] = 'static/uploads'
-app.config["SESSION_PERMANENT"] = True
-app.config['SESSION_COOKIE_SECURE'] = True
-
 
 # set up a secret key
 app.secret_key = os.getenv("SECRET_KEY")
@@ -27,9 +21,6 @@ user = os.environ.get('MEMCACHIER_USERNAME', '')
 passw = os.environ.get('MEMCACHIER_PASSWORD', '')
 mc = bmemcached.Client(servers, username=user, password=passw)
 mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
-
-
-
 
 
 # Ensure responses aren't cached
@@ -46,7 +37,7 @@ def index():
     '''Show the main page with instructions'''
 
     if request.method == 'GET':
-        session.clear()
+        #session.clear()
         return render_template('index.html')
 
     elif request.method == 'POST':
@@ -60,10 +51,7 @@ def index():
         # make directories and set up the session for later
         images_folder = f"static/images/{s_id}"
         directory = os.mkdir(images_folder)
-        session.clear()
-        session["id"] = s_id
-        session["file_url"] = "static/svg/visual_" + s_id + ".svg"
-        session["zip_url"] = "static/images/" + s_id + ".zip"
+        file_url = "static/svg/visual_" + s_id + ".svg"
        
         # check filename and extension
         filename = f.filename
@@ -79,8 +67,8 @@ def index():
         if file_ext == '.gexf':
             # run plotter script and return Finished to show the link to results page 
             from plotter import img_plotter
-            img_plotter(filename, images_folder, s_id)
-            return jsonify("Finished")
+            img_plotter(filename, images_folder, s_id, file_url)
+            return jsonify("Finished - index")
 
         elif file_ext == '.svg':
             # import and run svg_plot script
@@ -89,14 +77,17 @@ def index():
             return jsonify("Finished")
 
 
-@app.route('/results/<id>', methods=['GET'])
-def results(id):
+@app.route('/results/<sid>', methods=['GET'])
+def results(sid):
     '''Render a page with the SVG file. Zips the folder for download'''
-    print(id)
-    
-    name = f"static/images/{session.get('id')}"
+
+    file_url = f"svg/visual_{sid}.svg"
+    zip_url = f"images/{sid}.zip"
+
+    name = f"static/images/{sid}"
     shutil.make_archive(name, 'zip', name)
-    return render_template('result.html')
+
+    return render_template('result.html', zip_url=zip_url, file_url=file_url, sid = sid)
 
 
 @app.route('/counter', methods=['POST'])
@@ -109,8 +100,6 @@ def counter():
 
     if completed != total:
         return jsonify(f"{completed} of {total}")
-    else:
-        return jsonify("Finished")
 
 
 @app.route("/demo", methods=["GET"])
@@ -118,9 +107,5 @@ def demo():
     '''Render a page with the demo SVG file'''
 
     return render_template("demo.html")
-
-
-
-
 
 

@@ -52,11 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById("infodiv").innerHTML = "Error: Please upload a GEFX file";
                 document.getElementById("resultdiv").innerHTML = "";
 
-            } else if (response.includes("Finished")) {
+            } else if (response.includes("Finished - index")) {
                 clearTimeout(interval);
                 document.getElementById("infodiv").innerHTML = "Finished";
                 document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results/"+ randString + "'>Results Page</a>";
-                console.log("finished - 1")
+                console.log("finished - index")
 
             } else if (response.includes("'Check filename'")) {
                 clearTimeout(interval);
@@ -90,13 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // display progress
                     document.getElementById("infodiv").innerHTML = "Processed images: " + response.replace(/['"]+/g, '');
                     document.getElementById("resultdiv").innerHTML = "";
-                } else if (response.includes("Finished")) {
-                    clearTimeout(interval);
-                    document.getElementById("infodiv").innerHTML = "Finished";
-                    document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results/"+ randString + "'>Results Page</a>";;
-                    console.log("Finished - 2")
-    
-                }
+                } 
             };
 
             // make the request to get the progress

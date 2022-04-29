@@ -14,14 +14,14 @@ import shutil
 import bmemcached
 
 # import the application counter
-from application import session, mc #, images_counter
+from application import mc #, images_counter, session,
 
 
 #mc = bmemcached.Client(servers, username=user, password=passw)
 
 #mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
 
-def img_plotter(filename, images_folder, s_id):
+def img_plotter(filename, images_folder, s_id, file_url):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
@@ -43,8 +43,7 @@ def img_plotter(filename, images_folder, s_id):
     # Set internal variables
     #-------------------------------------------
 
-    outputfilename = session["file_url"]
-    #outputfilename = file_url ## <<<<<<<<<<<<<<<
+    outputfilename = file_url
 
     imgresizedim = settings['resizew'], settings['resizeh']
     imgdrawdim = settings['dispw'], settings['disph']
