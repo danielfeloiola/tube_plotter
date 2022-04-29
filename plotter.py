@@ -12,13 +12,13 @@ import requests
 import shutil
 
 # import the application counter
-from application import session, images_counter
+from application import session #, images_counter
 
 
-def img_plotter(filename, images_folder, s_id):
+def img_plotter(filename, images_folder):
 
 
-    print("DEBUG IMG_PLOTTER: " + s_id)
+    print("DEBUG IMG_PLOTTER: " + session.get('id'))
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
 
@@ -160,7 +160,7 @@ def img_plotter(filename, images_folder, s_id):
         curimg += 1
 
         # add the number of processed images to the variable
-        images_counter[s_id] = f'{curimg} of {numimages}'
+        session['counter'] = f'{curimg} of {numimages}'
 
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
