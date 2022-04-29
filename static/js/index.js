@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         const generateRandomString = (length=6)=>Math.random().toString(20).substr(2, length)
         const randString = generateRandomString(12);
+
+        //console.log(cookie.value);
         console.log(randString);
 
         // add to the form

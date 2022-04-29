@@ -45,8 +45,12 @@ def index():
         f = request.files['file']
         s_id = request.form['string']
 
-        # add id to the session
-        session['id'] = s_id
+        # add id to session, clear old sessions before starting
+        if session.get('id') != None:
+            session.clear()
+            session['id'] = s_id
+        elif session.get("id") == None:
+            session['id'] = s_id
 
 
         # make directories and add them to the cookies for later
@@ -78,7 +82,7 @@ def index():
 
             # run plotter - return nothing while it works 
             from plotter import img_plotter
-            img_plotter(filename, images_folder)
+            img_plotter(filename, images_folder, s_id)
 
             # return nothing
             return jsonify(f'Finishing...')
@@ -101,7 +105,8 @@ def results():
     '''Render a page with the SVG file. Zips the folder for download'''
 
     import shutil
-    name = f"static/images/{session['id']}"
+    s_id = session.get('id')
+    name = f"static/images/{s_id}"
     shutil.make_archive(name, 'zip', name)
     return render_template('result.html')
 
@@ -114,6 +119,7 @@ def counter():
     global images_counter
 
     # look into the dict for the id
+    print("DEBUG COUNTER: " + request.data.decode())
     images_processed = images_counter[request.data.decode()]
     result = images_processed.split(" of ")
     completed = result[0]
