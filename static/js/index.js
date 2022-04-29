@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById("infodiv").innerHTML = "Finished";
                 document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results'>Results Page</a>";
 
-            }else if (response.includes("'Check filename'")) {
+            } else if (response.includes("'Check filename'")) {
                 clearTimeout(interval);
                 document.getElementById("infodiv").innerHTML = "Check filename";
                 document.getElementById("resultdiv").innerHTML = "";
@@ -89,7 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     // display progress
                     document.getElementById("infodiv").innerHTML = "Processed images: " + response.replace(/['"]+/g, '');
                     document.getElementById("resultdiv").innerHTML = "";
-                } 
+                } else if (response.includes("Finished")) {
+                    clearTimeout(interval);
+                    document.getElementById("infodiv").innerHTML = "Finished";
+                    document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results'>Results Page</a>";
+    
+                }
             };
 
             // make the request to get the progress

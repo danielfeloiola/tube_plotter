@@ -1,11 +1,7 @@
 # important stuff
 from flask import Flask, jsonify, render_template, session, request
 from flask_session import Session
-import os
-
-
-
-import shutil
+import os, shutil, bmemcached
 
 # dict to count images
 images_counter = dict()
@@ -25,26 +21,15 @@ app.config['SESSION_COOKIE_SECURE'] = True
 # set up a secret key
 app.secret_key = os.getenv("SECRET_KEY")
 
-
-
-
-
-import bmemcached
-import os
-
+# memcAache setup
 servers = os.environ.get('MEMCACHIER_SERVERS', '').split(',')
 user = os.environ.get('MEMCACHIER_USERNAME', '')
 passw = os.environ.get('MEMCACHIER_PASSWORD', '')
-
 mc = bmemcached.Client(servers, username=user, password=passw)
-
 mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
 
 
-from plotter import img_plotter
 
-#mc.set("foo", "bar")
-#print(mc.get("foo"))
 
 
 # Ensure responses aren't cached
@@ -90,22 +75,15 @@ def index():
 
 
         if file_ext == '.gexf':
-            
             # run plotter script and return Finished to show the link to results page 
+            from plotter import img_plotter
             img_plotter(filename, images_folder, s_id)
             return jsonify("Finished")
 
         elif file_ext == '.svg':
-
-            # get the path for the uploaded file
-            #uploaded_file = 
-
-            # import the svg plotter and run
+            # import and run svg_plot script
             from svg_plot import svg_plotter
             svg_plotter(f'static/uploads/{filename}', file_url)
-
-            # return nothing
-            #return('', 204)
             return jsonify("Finished")
 
 
@@ -128,6 +106,8 @@ def counter():
 
     if completed != total:
         return jsonify(f"{completed} of {total}")
+    else:
+        return jsonify("Finished")
 
 
 @app.route("/demo", methods=["GET"])
