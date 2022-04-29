@@ -46,6 +46,7 @@ def index():
     '''Show the main page with instructions'''
 
     if request.method == 'GET':
+        session.clear()
         return render_template('index.html')
 
     elif request.method == 'POST':
@@ -59,6 +60,7 @@ def index():
         # make directories and set up the session for later
         images_folder = f"static/images/{s_id}"
         directory = os.mkdir(images_folder)
+        session.clear()
         session["id"] = s_id
         session["file_url"] = "static/svg/visual_" + s_id + ".svg"
         session["zip_url"] = "static/images/" + s_id + ".zip"

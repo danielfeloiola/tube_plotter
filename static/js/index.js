@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // make a timer to run the function every 2s (2000ms)
         // to update the user about the progress
-        var interval = setInterval(myTimer, 2000);
+        var interval = setInterval(myTimer, 5000);
 
         // setting a different timeout -> 30 minutes 
         xhr.timeout = 1800000;
