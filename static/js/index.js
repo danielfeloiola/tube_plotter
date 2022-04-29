@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (response.includes("Finished")) {
                 clearTimeout(interval);
                 document.getElementById("infodiv").innerHTML = "Finished";
-                document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results'>Results Page</a>";
+                document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results/"+ randString + "'>Results Page</a>";
+                console.log("finished - 1")
 
             } else if (response.includes("'Check filename'")) {
                 clearTimeout(interval);
@@ -92,7 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (response.includes("Finished")) {
                     clearTimeout(interval);
                     document.getElementById("infodiv").innerHTML = "Finished";
-                    document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results'>Results Page</a>";
+                    document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results/"+ randString + "'>Results Page</a>";;
+                    console.log("Finished - 2")
     
                 }
             };

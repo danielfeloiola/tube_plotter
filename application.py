@@ -89,10 +89,11 @@ def index():
             return jsonify("Finished")
 
 
-@app.route('/results', methods=['GET'])
-def results():
+@app.route('/results/<id>', methods=['GET'])
+def results(id):
     '''Render a page with the SVG file. Zips the folder for download'''
-
+    print(id)
+    
     name = f"static/images/{session.get('id')}"
     shutil.make_archive(name, 'zip', name)
     return render_template('result.html')
