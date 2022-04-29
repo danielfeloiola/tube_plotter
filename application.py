@@ -1,6 +1,5 @@
 # important stuff
 from flask import Flask, jsonify, render_template, request #session
-#from flask_session import Session
 import os, shutil, bmemcached
 
 # Configure application
@@ -37,7 +36,6 @@ def index():
     '''Show the main page with instructions'''
 
     if request.method == 'GET':
-        #session.clear()
         return render_template('index.html')
 
     elif request.method == 'POST':
@@ -100,6 +98,9 @@ def counter():
 
     if completed != total:
         return jsonify(f"{completed} of {total}")
+    else:
+        return jsonify("Finished")
+
 
 
 @app.route("/demo", methods=["GET"])

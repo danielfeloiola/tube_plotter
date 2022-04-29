@@ -90,7 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     // display progress
                     document.getElementById("infodiv").innerHTML = "Processed images: " + response.replace(/['"]+/g, '');
                     document.getElementById("resultdiv").innerHTML = "";
-                } 
+                } else if (response.includes("Finished - counter")) {
+                    clearTimeout(interval);
+                    document.getElementById("infodiv").innerHTML = "Finished";
+                    document.getElementById("resultdiv").innerHTML = "<a target='_blank' href='/results/"+ randString + "'>Results Page</a>";;
+                    console.log("Finished - 2")
+    
+                }
             };
 
             // make the request to get the progress
