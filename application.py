@@ -40,18 +40,12 @@ def index():
 
     elif request.method == 'POST':
 
-        # get the file uploaded file
-        f = request.files['file']
-
-        # get an id from de front-end to keed track of progress
+        # Making a dir to save images
         s_id = request.form['string']
+        os.makedirs(f"static/images/{s_id}/img/")
 
-        # make directories and set up the session for later
-        images_folder = f"static/images/{s_id}"
-        directory = os.mkdir(images_folder)
-        file_url = "static/svg/visual_" + s_id + ".svg"
-       
-        # check filename and extension
+        # get the file uploaded file and check name and ext
+        f = request.files['file']
         filename = f.filename
         if filename == '':
             return jsonify('Check filename')
@@ -61,17 +55,16 @@ def index():
                 return jsonify('Please check file extension')
             f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
 
-
         if file_ext == '.gexf':
             # run plotter script and return Finished to show the link to results page 
             from plotter import img_plotter
-            img_plotter(filename, images_folder, s_id, file_url)
+            img_plotter(filename, s_id)
             return jsonify("Finished - index")
 
         elif file_ext == '.svg':
             # import and run svg_plot script
             from svg_plot import svg_plotter
-            svg_plotter(f'static/uploads/{filename}', file_url)
+            svg_plotter(f'static/uploads/{filename}', s_id)
             return jsonify("Finished")
 
 
@@ -79,13 +72,11 @@ def index():
 def results(sid):
     '''Render a page with the SVG file. Zips the folder for download'''
 
-    file_url = f"svg/visual_{sid}.svg"
-    zip_url = f"images/{sid}.zip"
+    file_url = f"images/{sid}/img.svg"
+    zip_url = f"images/{sid}/img.zip"
+    shutil.make_archive(f"static/images/{sid}/img", 'zip', f"static/images/{sid}/img")
 
-    name = f"static/images/{sid}"
-    shutil.make_archive(name, 'zip', name)
-
-    return render_template('result.html', zip_url=zip_url, file_url=file_url, sid = sid)
+    return render_template('result.html', zip_url=zip_url, file_url=file_url)
 
 
 @app.route('/counter', methods=['POST'])

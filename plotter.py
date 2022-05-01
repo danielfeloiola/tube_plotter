@@ -21,13 +21,13 @@ from application import mc #, images_counter, session,
 
 #mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
 
-def img_plotter(filename, images_folder, s_id, file_url):
+def img_plotter(filename, s_id):
 
 
     print("\n-------------------------\nImage Network Plotter\n-------------------------")
 
     settings = {'input': 'static/uploads/espacializado.gexf',
-                'inimgdir': 'static/uploads/espacializado.gexf',
+                'inimgdir': f'static/uploads/{filename}',
                 'copyresized': False,
                 'outimgdir': 'img-thumbnail',
                 'resizew': 200,
@@ -42,6 +42,9 @@ def img_plotter(filename, images_folder, s_id, file_url):
     # ------------------------------------------
     # Set internal variables
     #-------------------------------------------
+
+    images_folder = f"static/images/{s_id}/img/"
+    file_url = f"static/images/{s_id}/img.svg"
 
     outputfilename = file_url
 
@@ -185,27 +188,32 @@ def img_plotter(filename, images_folder, s_id, file_url):
 
         nodeid = node.get('id')
 
+
         # TODO: O SVG AINDA ESTA VINDO COM OS LINKS E NAO COM OS ARQUIVOS <<<<<
-        imgfile = "https://i.ytimg.com/vi/" + nodeid + "/hqdefault.jpg?sqp=-oaymwEZCOADEI4CSFXyq4qpAwsIARUAAIhCGAFwAQ"
+
+        # SE USANDO LINKS
+
+        links = False
+
+        if links:
+            imgfile = "https://i.ytimg.com/vi/" + nodeid + "/hqdefault.jpg?sqp=-oaymwEZCOADEI4CSFXyq4qpAwsIARUAAIhCGAFwAQ"
+            response = requests.get(imgfile, stream=True)
+        else:
+            download_link = "https://i.ytimg.com/vi/" + nodeid + "/hqdefault.jpg?sqp=-oaymwEZCOADEI4CSFXyq4qpAwsIARUAAIhCGAFwAQ"
+            response = requests.get(download_link, stream=True)
+            imgfile = f"img/{nodeid}.png"
+
         linkUrl = "https://youtube.com/watch?v=" + nodeid #este link precisará ser substituído pelo nome do arquivo ?
-
-        '''
-        imgfile = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(fileAttId) +"\']",ns).get('value')
-        linkUrl = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(linkAttId) +"\']",ns).get('value')
-        print("\tImage file:", imgfile)
-        infile = os.path.join(settings['inimgdir'], imgfile)
-        '''
-
-
-        # Adding requests to get the image from the internet
-        response = requests.get(imgfile, stream=True)
-
 
         with open(f'{images_folder}/{nodeid}.png', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
 
             # INFILE
+
+            #infile = os.path.join(settings['inimgdir'], imgfile)  # <<<<<<<<<<<<<<<<<<<<< VERSAO COM DOWNLOAD
             infile = f'{images_folder}/{nodeid}.png'
+
+
             # infile = "img.png" # alterando: cada imagem tera o nome do nodeid
 
             try:

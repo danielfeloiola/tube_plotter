@@ -6,10 +6,10 @@
 
 {% block main %}
     <!-- show the image on the page -->
-    <object type="image/svg+xml" data="{{ url_for('static', filename='svg/visual_'+ sid + '.svg') }}"></object>
+    <object type="image/svg+xml" data="{{ url_for('static', filename=file_url) }}"></object>
 {% endblock %}
 
 {% block footer %}
     <!-- footer info -->
-    Open the image <a target="_blank" href="{{ url_for('static', filename=file_url) }}"> on a new tab</a>, download the <a download href="{{ url_for('static', filename=file_url) }}"> svg file</a> or download the <a download href="{{ url_for('static', filename=zip_url) }}">images folder</a>. {{session.id}}
+    Open the image <a target="_blank" href="{{ url_for('static', filename=file_url) }}"> on a new tab</a>, download the <a download href="{{ url_for('static', filename=file_url) }}"> svg file</a> or download the <a download href="{{ url_for('static', filename=zip_url) }}">images folder</a>.
 {% endblock %}
