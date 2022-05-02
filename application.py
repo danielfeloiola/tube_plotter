@@ -57,13 +57,13 @@ def index():
 
         if file_ext == '.gexf':
             # run plotter script and return Finished to show the link to results page 
-            from plotter import img_plotter
+            from helpers import img_plotter
             img_plotter(filename, s_id)
             return jsonify("Finished - index")
 
         elif file_ext == '.svg':
             # import and run svg_plot script
-            from svg_plot import svg_plotter
+            from helpers import svg_plotter
             svg_plotter(f'static/uploads/{filename}', s_id)
             return jsonify("Finished")
 
