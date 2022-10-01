@@ -12,7 +12,7 @@ import requests, shutil, bmemcached, re
 
 # import the application counter
 #from application import mc 
-from application import progress
+from index import progress
 #numimages = 0
 
 
