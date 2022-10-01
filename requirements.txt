@@ -16,7 +16,7 @@ Pillow==8.2.0
 psycopg2-binary==2.8.6
 python-binary-memcached==0.31.1
 python-dotenv==0.15.0
-requests==2.25.1
+requests==2.27.0
 six==1.16.0
 SQLAlchemy==1.4.36
 svgwrite==1.4.2

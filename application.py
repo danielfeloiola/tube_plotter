@@ -1,6 +1,6 @@
 # important stuff
 from flask import Flask, jsonify, render_template, request #session
-import os, shutil, bmemcached
+import os, shutil#, bmemcached
 
 # Configure application
 app = Flask(__name__)
@@ -15,12 +15,12 @@ app.config['UPLOAD_PATH'] = 'static/uploads'
 app.secret_key = os.getenv("SECRET_KEY")
 
 # memcAache setup
-servers = os.environ.get('MEMCACHIER_SERVERS', '').split(',')
-user = os.environ.get('MEMCACHIER_USERNAME', '')
-passw = os.environ.get('MEMCACHIER_PASSWORD', '')
-mc = bmemcached.Client(servers, username=user, password=passw)
-mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
-
+#servers = os.environ.get('MEMCACHIER_SERVERS', '').split(',')
+#user = os.environ.get('MEMCACHIER_USERNAME', '')
+#passw = os.environ.get('MEMCACHIER_PASSWORD', '')
+#mc = bmemcached.Client(servers, username=user, password=passw)
+#mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
+progress = dict()
 
 # Ensure responses aren't cached
 @app.after_request
@@ -83,7 +83,12 @@ def results(sid):
 def counter():
     '''Make a counter so the progress is displayed on the screen'''
 
-    result = mc.get(request.data.decode()).split(" of ")
+    s_id = request.data.decode()
+    result = progress[s_id].split(" of ")
+    print(result)
+    #result = progress.split(" of ")
+    #print(result)
+    
     completed = result[0]
     total = result[1]   
 

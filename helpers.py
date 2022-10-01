@@ -11,7 +11,9 @@ import os, configparser, argparse, sys, platform, traceback
 import requests, shutil, bmemcached, re
 
 # import the application counter
-from application import mc 
+#from application import mc 
+from application import progress
+#numimages = 0
 
 
 def img_plotter(filename, s_id):
@@ -159,7 +161,9 @@ def img_plotter(filename, s_id):
         curimg += 1
 
         # add the number of processed images to the cache
-        mc.set(s_id, f"{curimg} of {numimages}")
+        #global progress
+        #global numimages
+        progress = f"{curimg} of {numimages}"
 
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
@@ -302,7 +306,12 @@ def svg_plotter(filename, s_id):
                 
                 curimg += 1
                 counter = 0
-                mc.set(s_id, f"{curimg} of {total}")
+
+                
+                #global progress
+                #global numimages
+                progress[s_id] = f"{curimg} of {total}"
+                #print(progress)
 
 
         # finally writes the line
