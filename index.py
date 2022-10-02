@@ -1,6 +1,6 @@
 # important stuff
 from flask import Flask, jsonify, render_template, request #session
-import os, shutil#, bmemcached
+import os, shutil
 
 # Configure application
 app = Flask(__name__)
@@ -14,12 +14,7 @@ app.config['UPLOAD_PATH'] = 'static/uploads'
 # set up a secret key
 app.secret_key = os.getenv("SECRET_KEY")
 
-# memcAache setup
-#servers = os.environ.get('MEMCACHIER_SERVERS', '').split(',')
-#user = os.environ.get('MEMCACHIER_USERNAME', '')
-#passw = os.environ.get('MEMCACHIER_PASSWORD', '')
-#mc = bmemcached.Client(servers, username=user, password=passw)
-#mc.enable_retry_delay(True)  # Enabled by default. Sets retry delay to 5s.
+# store progress -> not ideal but...
 progress = dict()
 
 # Ensure responses aren't cached
@@ -85,9 +80,6 @@ def counter():
 
     s_id = request.data.decode()
     result = progress[s_id].split(" of ")
-    print(result)
-    #result = progress.split(" of ")
-    #print(result)
     
     completed = result[0]
     total = result[1]   

@@ -160,11 +160,6 @@ def img_plotter(filename, s_id):
         # Update progress
         curimg += 1
 
-        # add the number of processed images to the cache
-        #global progress
-        #global numimages
-        progress = f"{curimg} of {numimages}"
-
         typeAtt = node.find("gexf:attvalues/gexf:attvalue[@for=\'" + str(typeAttId) +"\']",ns)
 
         innodex = (float(node.find("viz:position", viz).get('x'))-minx)/inw
@@ -179,14 +174,6 @@ def img_plotter(filename, s_id):
 
         nodeid = node.get('id')
 
-        # SE USANDO LINKS
-
-        #links = False
-
-        #if links:
-        #    imgfile = "https://i.ytimg.com/vi/" + nodeid + "/hqdefault.jpg?sqp=-oaymwEZCOADEI4CSFXyq4qpAwsIARUAAIhCGAFwAQ"
-        #    response = requests.get(imgfile, stream=True)
-        #else:
         download_link = "https://i.ytimg.com/vi/" + nodeid + "/hqdefault.jpg?sqp=-oaymwEZCOADEI4CSFXyq4qpAwsIARUAAIhCGAFwAQ"
         response = requests.get(download_link, stream=True)
         imgfile = f"img/{nodeid}.png"
@@ -201,8 +188,6 @@ def img_plotter(filename, s_id):
             #infile = os.path.join(settings['inimgdir'], imgfile)  # <<<<<<<<<<<<<<<<<<<<< VERSAO COM DOWNLOAD
             infile = f'{images_folder}/{nodeid}.png'
 
-
-            # infile = "img.png" # alterando: cada imagem tera o nome do nodeid
 
             try:
                 curimage = Image.open(infile)
@@ -226,6 +211,7 @@ def img_plotter(filename, s_id):
 
             # DECOMMENT after debug #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             print("\tPlotting image: ", f'{curimg} of {numimages}')
+            progress[s_id] = f"{curimg} of {numimages}"
 
             link = outsvg.add(outsvg.a(linkUrl,id=nodeid))
             image = link.add(outsvg.image(imgfp, insert=(outnodex, outnodey), size=imgdrawdim))
@@ -307,12 +293,7 @@ def svg_plotter(filename, s_id):
                 curimg += 1
                 counter = 0
 
-                
-                #global progress
-                #global numimages
                 progress[s_id] = f"{curimg} of {total}"
-                #print(progress)
-
 
         # finally writes the line
         f.write(item)
